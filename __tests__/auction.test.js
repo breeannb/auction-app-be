@@ -52,6 +52,7 @@ describe('auction routes', () => {
       });
   });
 
+  //   auctions details (title, description, quantity, end date/time, populated user, a list of all bids)
   it('gets an auction by id via GET', () => {
     return Auction.create({
       user: user._id,
@@ -63,11 +64,14 @@ describe('auction routes', () => {
       .then(auction=> request(app).get(`/api/v1/auctions/${auction._id}`))
       .then(res => {
         expect(res.body).toEqual({
-          user: user._id,
+          user: {
+            email: 'breeanntest@breeanntest.com',
+            passwordHash: 'password1234'
+          },
           title: 'Camera Lens Auction', 
           description: 'Description for Camera Lens Auction', 
           quantity: 3, 
-          endDate: Date()
+          endDate: expect.anything()
         });
       });
   });
