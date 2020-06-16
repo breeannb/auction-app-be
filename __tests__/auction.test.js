@@ -98,7 +98,7 @@ describe('auction routes', () => {
       .then(res => {
         expect(res.body).toEqual({
           bids: [{
-            _id: expect.anything(),
+            // id: expect.anything(),
             auction: auction.id,
             price: 10
           }],

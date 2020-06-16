@@ -32,17 +32,17 @@ describe('bid routes', () => {
     return mongod.stop();
   });
 
-  it('creates a new bid', async() => {
+  it('creates a new bid via POST', async() => {
     const auction = await Auction.create({
-      user: user._id,
+      user: user.id,
       title: 'Camera Lens Auction',
       description: 'Description for Camera Lens Auction',
-      quantity: 1,
+      quantity: 4,
       endDate: Date()
     });
     
     return request(app)
-      .post('/api/v1/bid')
+      .post('/api/v1/bids')
       .send({
         auction: auction._id,
         user: user._id,
@@ -52,12 +52,11 @@ describe('bid routes', () => {
       })
       .then(res => {
         expect(res.body).toEqual({
-          auction: auction._id,
-          user: user._id,
+          auction: auction.id,
+          user: user.id,
           price: 500,
           quantity: 4,
-          accepted: true,
-          __v: 0
+          accepted: true
         });
       });
   }); 
