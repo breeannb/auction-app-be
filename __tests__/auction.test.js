@@ -155,7 +155,47 @@ describe('auction routes', () => {
           }
         ]);
       });
-    
   });
+
+  it('gets a bid by id', async() => {
+
+    const auction = await Auction.create({
+      user: user._id, 
+      title: 'Camera Lens Auction', 
+      description: 'Description of Lens Auction',
+      quantity: 3, 
+      endDate: Date()
+    }, 
+    {
+      user: user._id, 
+      title: 'Camera Body Auction', 
+      description: 'Description of Body Auction',
+      quantity: 3, 
+      endDate: Date()
+    });
+
+    const bid = await Bid.create({
+      auction: auction.id,
+      user: user.id,
+      price: 500,
+      quantity: 1,
+      accepted: true
+    });
+
+    return request(app)
+      .get(`/api/v1/bids/${bid._id}`)
+      .auth('breeanntest@breeanntest.com', 'password1234')
+      .then(res => {
+        expect(res.body).toEqual({
+          auction: auction.id,
+          user: user.id,
+          price: 500,
+          quantity: 1,
+          accepted: true
+        });
+      }); 
+  });
+
+
 });
 
