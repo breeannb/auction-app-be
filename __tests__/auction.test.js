@@ -27,27 +27,27 @@ describe('auction routes', () => {
     });
   });
 
-  let auctionOne;
-  beforeEach(async() => {
-    auctionOne = await Auction.create({
-      user: user._id, 
-      title: 'Camera Lens Auction', 
-      description: 'Description of Lens Auction',
-      quantity: 3, 
-      endDate: Date()
-    });
-  });
+  //   let auctionOne;
+  //   beforeEach(async() => {
+  //     auctionOne = await Auction.create({
+  //       user: user._id, 
+  //       title: 'Camera Lens Auction', 
+  //       description: 'Description of Lens Auction',
+  //       quantity: 3, 
+  //       endDate: Date()
+  //     });
+  //   });
 
-  let auctionTwo;
-  beforeEach(async() => {
-    auctionTwo = await Auction.create({
-      user: user._id, 
-      title: 'Camera Body Auction', 
-      description: 'Description of Body Auction',
-      quantity: 2, 
-      endDate: Date()
-    });
-  });
+  //   let auctionTwo;
+  //   beforeEach(async() => {
+  //     auctionTwo = await Auction.create({
+  //       user: user._id, 
+  //       title: 'Camera Body Auction', 
+  //       description: 'Description of Body Auction',
+  //       quantity: 2, 
+  //       endDate: Date()
+  //     });
+  //   });
   
   afterAll(async() => {
     await mongoose.connection.close();
@@ -116,25 +116,44 @@ describe('auction routes', () => {
 
   //the get route will be used to get a list of all auctions
   it('gets the auction by id via GET', async() => {
+    await Auction.create({
+      user: user._id, 
+      title: 'Camera Lens Auction', 
+      description: 'Description of Lens Auction',
+      quantity: 3, 
+      endDate: Date()
+    }, 
+    {
+      user: user._id, 
+      title: 'Camera Body Auction', 
+      description: 'Description of Body Auction',
+      quantity: 3, 
+      endDate: Date()
+    });
+    
     return request(app)
-      .get(`/api/v1/auctions/`)
+      .get('/api/v1/auctions/')
       .then(res => {
-        expect(res.body).toEqual(
+        expect(res.body).toEqual([
           {
-            user: user._id,
-            title: 'Camera Lens Auction', 
-            description: 'Description for Camera Lens Auction', 
-            quantity: 3, 
+            user: {
+              _id: user.id
+            },
+            title: 'Camera Lens Auction',
+            description: 'Description of Lens Auction',
+            quantity: 3,
             endDate: expect.anything()
           }, 
           {
-            user: user._id, 
-            title: 'Camera Body Auction', 
+            user: {
+              _id: user.id
+            },
+            title: 'Camera Body Auction',
             description: 'Description of Body Auction',
-            quantity: 2, 
+            quantity: 3,
             endDate: expect.anything()
           }
-        );
+        ]);
       });
     
   });
