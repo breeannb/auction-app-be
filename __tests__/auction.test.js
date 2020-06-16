@@ -26,28 +26,6 @@ describe('auction routes', () => {
       passwordHash: 'password1234'
     });
   });
-
-  //   let auctionOne;
-  //   beforeEach(async() => {
-  //     auctionOne = await Auction.create({
-  //       user: user._id, 
-  //       title: 'Camera Lens Auction', 
-  //       description: 'Description of Lens Auction',
-  //       quantity: 3, 
-  //       endDate: Date()
-  //     });
-  //   });
-
-  //   let auctionTwo;
-  //   beforeEach(async() => {
-  //     auctionTwo = await Auction.create({
-  //       user: user._id, 
-  //       title: 'Camera Body Auction', 
-  //       description: 'Description of Body Auction',
-  //       quantity: 2, 
-  //       endDate: Date()
-  //     });
-  //   });
   
   afterAll(async() => {
     await mongoose.connection.close();
@@ -75,7 +53,6 @@ describe('auction routes', () => {
       });
   });
 
-  //   auctions details (title, description, quantity, end date/time, populated user, a list of all bids)
   it('gets the auction by id via GET', async() => {
     const auction = await Auction.create({
       user: user._id,
@@ -98,7 +75,6 @@ describe('auction routes', () => {
       .then(res => {
         expect(res.body).toEqual({
           bids: [{
-            // id: expect.anything(),
             auction: auction.id,
             price: 10
           }],
@@ -114,7 +90,6 @@ describe('auction routes', () => {
       });
   });
 
-  //the get route will be used to get a list of all auctions
   it('gets the auction by id via GET', async() => {
     await Auction.create({
       user: user._id, 
