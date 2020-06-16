@@ -39,6 +39,17 @@ describe('bid routes', () => {
     });
   });
 
+  let bid;
+  beforeEach(async() => {
+    bid = await Bid.create({
+      auction: auction.id,
+      user: user.id,
+      price: 500,
+      quantity: 1,
+      accepted: true
+    });
+  });
+
   afterAll(async() => {
     await mongoose.connection.close();
     return mongod.stop();
@@ -75,14 +86,6 @@ describe('bid routes', () => {
 
   it('gets a bid by id', async() => {
 
-    const bid = await Bid.create({
-      auction: auction.id,
-      user: user.id,
-      price: 500,
-      quantity: 1,
-      accepted: true
-    });
-
     return request(app)
       .get(`/api/v1/bids/${bid._id}`)
       .auth('breeanntest@breeanntest.com', 'password1234')
@@ -95,6 +98,20 @@ describe('bid routes', () => {
           accepted: true
         });
       }); 
+  });
+
+  it('deletes a bid', () => {
+    request(app)
+      .delete(`/api/v1/bids/${bid._id}`)
+      .then(res => {
+        expect(res.body).toEqual({
+          auction: auction.id,
+          user: user.id,
+          price: 500,
+          quantity: 1,
+          accepted: true
+        });
+      });
   });
 
 });
