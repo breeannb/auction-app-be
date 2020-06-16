@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const connect = require('../lib/utils/connect');
 const User = require('../lib/models/User.js');
 const Auction = require('../lib/models/Auction.js');
+const Bid = require('../lib/models/Bid.js');
 
 const request = require('supertest');
 const app = require('../lib/app');
@@ -24,6 +25,17 @@ describe('bid routes', () => {
     user = await User.create({
       email: 'breeanntest@breeanntest.com',
       passwordHash: 'password1234'
+    });
+  });
+
+  let auction;
+  beforeEach(async() => {
+    auction = await Auction.create({
+      user: user._id, 
+      title: 'Camera Lens Auction', 
+      description: 'Description of Lens Auction',
+      quantity: 3, 
+      endDate: Date()
     });
   });
 
@@ -60,5 +72,29 @@ describe('bid routes', () => {
         });
       });
   }); 
+
+  it('gets a bid by id', async() => {
+
+    const bid = await Bid.create({
+      auction: auction.id,
+      user: user.id,
+      price: 500,
+      quantity: 1,
+      accepted: true
+    });
+
+    return request(app)
+      .get(`/api/v1/bids/${bid._id}`)
+      .auth('breeanntest@breeanntest.com', 'password1234')
+      .then(res => {
+        expect(res.body).toEqual({
+          auction: auction.id,
+          user: user.id,
+          price: 500,
+          quantity: 1,
+          accepted: true
+        });
+      }); 
+  });
 
 });
