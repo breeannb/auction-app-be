@@ -26,6 +26,28 @@ describe('auction routes', () => {
       passwordHash: 'password1234'
     });
   });
+
+  let auctionOne;
+  beforeEach(async() => {
+    auctionOne = await Auction.create({
+      user: user._id, 
+      title: 'Camera Lens Auction', 
+      description: 'Description of Lens Auction',
+      quantity: 3, 
+      endDate: Date()
+    });
+  });
+
+  let auctionTwo;
+  beforeEach(async() => {
+    auctionTwo = await Auction.create({
+      user: user._id, 
+      title: 'Camera Body Auction', 
+      description: 'Description of Body Auction',
+      quantity: 2, 
+      endDate: Date()
+    });
+  });
   
   afterAll(async() => {
     await mongoose.connection.close();
@@ -57,8 +79,8 @@ describe('auction routes', () => {
   it('gets the auction by id via GET', async() => {
     const auction = await Auction.create({
       user: user._id,
-      title: 'auction title',
-      description: 'auction description',
+      title: 'Camera Lens Auction',
+      description: 'Description for Camera Lens Auction',
       quantity: 1,
       endDate: Date()
     });
@@ -91,4 +113,30 @@ describe('auction routes', () => {
         });
       });
   });
+
+  //the get route will be used to get a list of all auctions
+  it('gets the auction by id via GET', async() => {
+    return request(app)
+      .get(`/api/v1/auctions/`)
+      .then(res => {
+        expect(res.body).toEqual(
+          {
+            user: user._id,
+            title: 'Camera Lens Auction', 
+            description: 'Description for Camera Lens Auction', 
+            quantity: 3, 
+            endDate: expect.anything()
+          }, 
+          {
+            user: user._id, 
+            title: 'Camera Body Auction', 
+            description: 'Description of Body Auction',
+            quantity: 2, 
+            endDate: expect.anything()
+          }
+        );
+      });
+    
+  });
 });
+
