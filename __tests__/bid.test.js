@@ -100,7 +100,7 @@ describe('bid routes', () => {
       }); 
   });
 
-  it('deletes a bid', () => {
+  it('deletes a bid via Delete', () => {
     request(app)
       .delete(`/api/v1/bids/${bid._id}`)
       .then(res => {
